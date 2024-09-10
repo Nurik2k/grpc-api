@@ -1,0 +1,46 @@
+syntax = "proto3";
+
+package products;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "../pkg/domain/products";
+
+message FetchRequest {
+    string url = 1;
+}
+
+message FetchResponse {
+    string status = 1;
+}
+
+message ListRequest {
+
+    enum SortingField {
+        name = 0;
+        price = 1;
+        changes_count = 2;
+        timestamp = 3;
+    }
+
+    SortingField sort_field = 1;
+    int32 sort_asc = 2;
+    int32 paging_offset = 3;
+    int32 paging_limit = 4;
+}
+
+message ProductItem {
+    string name = 1;
+    int32 price = 2;
+    int32 count = 3;
+    google.protobuf.Timestamp timestamp = 4;
+}
+
+message ListResponse {
+    repeated ProductItem product = 1;
+}
+
+service ProductsService {
+  rpc Fetch(FetchRequest) returns (FetchResponse) {}
+  rpc List(ListRequest) returns (ListResponse) {}
+}
